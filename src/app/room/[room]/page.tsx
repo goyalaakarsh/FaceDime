@@ -56,7 +56,7 @@ export default function RoomPage({ params }: PageParams) {
         };
 
         initializeMedia();
-    }, []);
+    }, [peer, room, socket]);
 
     // Handle socket events
     useEffect(() => {
@@ -135,7 +135,7 @@ export default function RoomPage({ params }: PageParams) {
             socket.off('call-accepted');
             socket.off('ice-candidate');
         };
-    }, [socket, peer, room]);
+    }, [socket, peer, room, createOffer, setRemoteAnswer, createAnswer, addIceCandidate]);
 
     const handleMediaToggle = (type: 'audio' | 'video') => {
         if (!localStream) return;

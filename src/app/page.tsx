@@ -12,24 +12,25 @@ export default function Home() {
   const [room, setRoom] = useState('');
   const { socket } = useSocket();
   const router = useRouter();
-
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !room) return;
+    if (!name || !room || !socket) return;
     socket.emit('join', { user: name, room: room });
   };
-
+  
   useEffect(() => {
+    if (!socket) return;
     socket.on('joined', (data: { room: string, user: string }) => {
       console.log(`${data.user} joined room ${data.room}`);
       router.push(`/room/${data.room}`);
     });
 
     return () => {
-      socket.off('joined');
+      if (socket) socket.off('joined');
     };
   }, [socket, router]);
-
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <h1 className="text-4xl font-bold text-center">Welcome to FaceDime</h1>
